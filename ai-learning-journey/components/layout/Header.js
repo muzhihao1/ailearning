@@ -107,12 +107,12 @@ export default function Header() {
             
             {!user ? (
               <div className="space-x-2">
-                <Link href="/login">
+                <Link href="/auth/login-simple">
                   <span className="px-4 py-2 rounded-md border border-primary text-primary hover:bg-primary hover:text-white transition-colors">
                     登录
                   </span>
                 </Link>
-                <Link href="/register">
+                <Link href="/auth/register-simple">
                   <span className="px-4 py-2 rounded-md bg-primary text-white hover:bg-primary-dark transition-colors">
                     注册
                   </span>
@@ -216,7 +216,7 @@ export default function Header() {
             
             {!user ? (
               <div className="flex flex-col space-y-2 pt-2 border-t border-gray-200">
-                <Link href="/login">
+                <Link href="/auth/login-simple">
                   <span 
                     className="w-full text-center px-4 py-2 rounded-md border border-primary text-primary"
                     onClick={() => setIsOpen(false)}
@@ -224,7 +224,7 @@ export default function Header() {
                     登录
                   </span>
                 </Link>
-                <Link href="/register">
+                <Link href="/auth/register-simple">
                   <span 
                     className="w-full text-center px-4 py-2 rounded-md bg-primary text-white"
                     onClick={() => setIsOpen(false)}

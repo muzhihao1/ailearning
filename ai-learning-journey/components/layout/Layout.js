@@ -19,11 +19,12 @@ export default function Layout({ children, title = 'AI学习之旅 | 从零开�
       
       // 如果是需要认证的页面且没有登录，则重定向到登录页
       if (authRequiredPaths.includes(router.pathname) && !session) {
-        router.push('/login');
+        router.push('/auth/login-simple');
       }
       
       // 如果是登录页但已经登录，则重定向到仪表板
-      if ((router.pathname === '/login' || router.pathname === '/register') && session) {
+      if ((router.pathname === '/login' || router.pathname === '/register' ||
+           router.pathname === '/auth/login-simple' || router.pathname === '/auth/register-simple') && session) {
         router.push('/dashboard');
       }
     };

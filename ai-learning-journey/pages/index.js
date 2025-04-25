@@ -66,6 +66,11 @@ export default function Home() {
                         查看学习路线
                       </span>
                     </Link>
+                    <Link href="/auth/login-simple">
+                      <span className="btn-outline px-8 py-3 rounded-full text-lg font-semibold border-2 border-white text-white hover:bg-white hover:text-indigo-600 transition-colors">
+                        登录
+                      </span>
+                    </Link>
                   </>
                 ) : (
                   <>
