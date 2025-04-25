@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { createBrowserSupabaseClient } from '@supabase/auth-helpers-nextjs'
+import { createPagesBrowserClient } from '@supabase/auth-helpers-nextjs'
 import { SessionContextProvider, useUser, useSupabaseClient } from '@supabase/auth-helpers-react'
 import { useRouter } from 'next/router'
 
@@ -57,7 +57,7 @@ function AuthWrapper({ children }) {
 }
 
 function MyApp({ Component, pageProps }) {
-  const [supabaseClient] = useState(() => createBrowserSupabaseClient())
+  const [supabaseClient] = useState(() => createPagesBrowserClient())
 
   return (
     <SessionContextProvider

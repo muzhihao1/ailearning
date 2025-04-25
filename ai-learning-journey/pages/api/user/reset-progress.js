@@ -1,4 +1,5 @@
-import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { createServerClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -6,7 +7,30 @@ export default async function handler(req, res) {
   }
   
   // 初始化Supabase客户端（服务器端）
-  const supabase = createServerSupabaseClient({ req, res });
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    {
+      cookies: {
+        get: (name) => {
+          // 这里需要从请求中获取cookie
+          const cookieHeader = req.headers.cookie || '';
+          if (!cookieHeader) return undefined;
+          
+          const match = cookieHeader.match(new RegExp(`(^|;\\s*)${name}=([^;]*)`));
+          return match ? match[2] : undefined;
+        },
+        set: (name, value, options) => {
+          // 在服务端API路由中，我们需要手动设置cookie到响应中
+          res.setHeader('Set-Cookie', `${name}=${value}; Path=${options.path}; ${options.httpOnly ? 'HttpOnly;' : ''} ${options.secure ? 'Secure;' : ''} SameSite=${options.sameSite || 'Lax'}`);
+        },
+        remove: (name, options) => {
+          // 移除cookie
+          res.setHeader('Set-Cookie', `${name}=; Path=${options.path}; Expires=Thu, 01 Jan 1970 00:00:00 GMT; ${options.httpOnly ? 'HttpOnly;' : ''} ${options.secure ? 'Secure;' : ''} SameSite=${options.sameSite || 'Lax'}`);
+        },
+      },
+    }
+  );
   
   // 验证用户是否已登录
   const {

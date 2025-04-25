@@ -7,6 +7,7 @@ export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [profile, setProfile] = useState(null);
+  const [profileError, setProfileError] = useState(null);
   const router = useRouter();
   const supabase = useSupabaseClient();
   const user = useUser();
@@ -31,20 +32,50 @@ export default function Header() {
   }, [user]);
 
   const fetchProfile = async () => {
+    if (!user) return;
+    
     try {
-      const { data, error } = await supabase
+      // 尝试从profiles表获取数据
+      let { data, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', user.id)
         .single();
 
+      // 如果出错，可能是表名不对，尝试从users表获取
       if (error) {
-        console.error('Error fetching profile:', error);
-      } else {
-        setProfile(data);
+        console.log('从profiles表获取数据失败，尝试从users表获取:', error.message);
+        
+        const { data: userData, error: userError } = await supabase
+          .from('users')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+        
+        if (userError) {
+          console.error('获取用户资料失败:', userError);
+          setProfileError('获取用户资料失败');
+          // 使用默认个人资料
+          setProfile({
+            username: user.email?.split('@')[0] || '用户',
+            avatar_url: null
+          });
+          return;
+        }
+        
+        data = userData;
       }
+
+      setProfile(data);
+      setProfileError(null);
     } catch (error) {
-      console.error('Error:', error);
+      console.error('获取个人资料时发生错误:', error);
+      setProfileError('获取个人资料失败');
+      // 使用默认个人资料
+      setProfile({
+        username: user.email?.split('@')[0] || '用户',
+        avatar_url: null
+      });
     }
   };
 
@@ -128,7 +159,7 @@ export default function Header() {
                       <i className="fas fa-user text-gray-600"></i>
                     )}
                   </div>
-                  <span className="text-gray-700">{profile?.username || user.email}</span>
+                  <span className="text-gray-700">{profile?.username || user.email?.split('@')[0] || user.email}</span>
                   <i className="fas fa-chevron-down text-xs text-gray-500"></i>
                 </div>
                 
@@ -243,7 +274,7 @@ export default function Header() {
                       <i className="fas fa-user text-gray-600"></i>
                     )}
                   </div>
-                  <span className="text-gray-700">{profile?.username || user.email}</span>
+                  <span className="text-gray-700">{profile?.username || user.email?.split('@')[0] || user.email}</span>
                 </div>
                 <Link href="/dashboard">
                   <span 
