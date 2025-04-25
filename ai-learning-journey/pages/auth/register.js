@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { supabase } from '../../lib/supabase';
 import Layout from '../../components/layout/Layout';
 
 export default function Register() {
@@ -11,13 +11,14 @@ export default function Register() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [message, setMessage] = useState(null);
   const router = useRouter();
-  const supabase = useSupabaseClient();
 
-  async function handleRegister(e) {
+  const handleRegister = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    setMessage(null);
     
     // 密码验证
     if (password !== confirmPassword) {
@@ -33,8 +34,7 @@ export default function Register() {
     }
     
     try {
-      // 1. 创建用户
-      const { data: authData, error: authError } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -44,34 +44,22 @@ export default function Register() {
         },
       });
       
-      if (authError) throw authError;
+      if (error) throw error;
       
-      // 2. 创建用户个人资料
-      if (authData?.user) {
-        const { error: profileError } = await supabase
-          .from('users')
-          .insert({
-            id: authData.user.id,
-            username,
-            email,
-            level: 1,
-            exp: 0,
-            points: 50,
-            streak: 0,
-          });
-        
-        if (profileError) throw profileError;
+      // 注册成功
+      if (data?.user?.identities?.length === 0) {
+        setError('该邮箱已注册，请直接登录');
+      } else {
+        setMessage('注册成功！请查看您的邮箱进行验证');
+        // 如果不需要邮箱验证，可以直接跳转
+        // router.push('/');
       }
-      
-      // 成功注册并登录
-      router.push('/dashboard');
     } catch (error) {
-      console.error('注册错误:', error);
       setError(error.message);
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
     <Layout title="注册 | AI学习之旅" description="创建您的AI学习之旅账户，开启AI学习之旅">
@@ -102,6 +90,19 @@ export default function Register() {
                     </div>
                     <div className="ml-3">
                       <p className="text-sm text-red-700">{error}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {message && (
+                <div className="bg-green-50 border-l-4 border-green-400 p-4 mb-6">
+                  <div className="flex">
+                    <div className="flex-shrink-0">
+                      <i className="fas fa-check-circle text-green-400"></i>
+                    </div>
+                    <div className="ml-3">
+                      <p className="text-sm text-green-700">{message}</p>
                     </div>
                   </div>
                 </div>
