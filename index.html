@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>零基础AI编程学习计划</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <header id="header">
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <i class="fas fa-brain"></i>AI学习之旅
+                </div>
+                <ul>
+                    <li><a href="#hero" class="active">首页</a></li>
+                    <li><a href="#current-task">当前任务</a></li>
+                    <li><a href="#learning-path">学习路径</a></li>
+                    <li><a href="#resources">学习资源</a></li>
+                    <li><a href="#game-elements">游戏中心</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 游戏状态栏 -->
+    <div class="game-status-bar">
+        <div class="container">
+            <div class="status-item level">
+                <i class="fas fa-star"></i>
+                <span>等级: <strong id="user-level">1</strong></span>
+            </div>
+            <div class="status-item exp">
+                <i class="fas fa-bolt"></i>
+                <span>经验值: <strong id="user-exp">0</strong>/100</span>
+                <div class="exp-bar">
+                    <div class="exp-progress" style="width: 0%"></div>
+                </div>
+            </div>
+            <div class="status-item points">
+                <i class="fas fa-coins"></i>
+                <span>编程点数: <strong id="code-points">50</strong></span>
+            </div>
+            <div class="status-item streak">
+                <i class="fas fa-fire"></i>
+                <span>学习连续天数: <strong id="streak-days">0</strong></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 英雄区域 -->
+    <section id="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>开启你的AI编程之旅</h1>
+                <p>从零开始，系统学习人工智能编程，构建未来科技能力。我们为你精心设计了全面的学习计划，助你成为AI领域的专业人才。</p>
+                <div class="stats">已有 <strong>5000+</strong> 学习者加入，学习已持续 <strong id="days-count">0</strong> 天</div>
+                <div class="hero-buttons">
+                    <a href="#current-task" class="btn btn-primary">开始当前任务</a>
+                    <a href="#learning-path" class="btn btn-secondary">查看学习路径</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 当前学习任务 -->
+    <section id="current-task" class="section current-task">
+        <div class="container">
+            <h2 class="section-title">当前学习任务</h2>
+            <div class="current-task-container">
+                <div class="current-task-status">
+                    <div class="current-phase">
+                        <span class="phase-indicator">第1阶段</span>
+                        <h3>Python编程基础</h3>
+                        <div class="overall-progress">
+                            <div class="progress-label">
+                                <span>总体进度</span>
+                                <span>25%</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress" style="width: 25%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="current-task-details">
+                    <div class="task-card active">
+                        <div class="task-header">
+                            <h3>Python 数据结构与算法</h3>
+                            <span class="task-badge">进行中</span>
+                        </div>
+                        <div class="task-description">
+                            <p>掌握Python中的列表、字典、集合等数据结构，以及常见算法的Python实现。</p>
+                        </div>
+                        <div class="task-progress">
+                            <div class="progress-label">
+                                <span>完成度</span>
+                                <span>60%</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress" style="width: 60%"></div>
+                            </div>
+                        </div>
+                        <div class="task-actions">
+                            <a href="https://docs.python.org/zh-cn/3/tutorial/datastructures.html" class="btn btn-primary" target="_blank">继续学习</a>
+                            <a href="#" class="btn btn-secondary">查看任务详情</a>
+                        </div>
+                    </div>
+
+                    <div class="next-task">
+                        <h4>下一个任务</h4>
+                        <div class="task-card upcoming">
+                            <div class="task-header">
+                                <h3>Python文件操作与异常处理</h3>
+                                <span class="task-badge">即将开始</span>
+                            </div>
+                            <div class="task-description">
+                                <p>学习Python中的文件读写、异常捕获与处理机制，为数据处理打下基础。</p>
+                            </div>
+                            <div class="task-actions">
+                                <a href="https://docs.python.org/zh-cn/3/tutorial/inputoutput.html" class="btn btn-secondary" target="_blank">预习资料</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 学习路径 -->
+    <section id="learning-path" class="section learning-path">
+        <div class="container">
+            <h2 class="section-title">AI学习路径</h2>
+            <p class="section-description">我们为零基础学习者设计了完整的学习路径，从Python基础到AI应用开发，循序渐进，系统提升</p>
+            
+            <!-- 第1阶段：Python编程基础 -->
+            <div class="phase-wrapper">
+                <div class="phase expanded">
+                    <div class="phase-header">
+                        <div class="phase-number">1</div>
+                        <h3 class="phase-title">Python编程基础</h3>
+                        <div class="phase-duration"><i class="far fa-clock"></i> 2-3个月</div>
+                        <div class="phase-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="phase-content">
+                        <p>建立坚实的Python编程基础，掌握数据结构、函数和面向对象编程等概念。</p>
+                        <div class="task-list">
+                            <div class="task-item completed">
+                                <div class="task-checkbox"><i class="fas fa-check"></i></div>
+                                <div class="task-info">
+                                    <h4>Python环境搭建与基础语法</h4>
+                                    <p>安装Python环境，学习变量、数据类型和基本运算</p>
+                                </div>
+                                <div class="task-status completed">已完成</div>
+                            </div>
+                            
+                            <div class="task-item completed">
+                                <div class="task-checkbox"><i class="fas fa-check"></i></div>
+                                <div class="task-info">
+                                    <h4>Python控制流与函数</h4>
+                                    <p>学习条件语句、循环和函数定义与调用</p>
+                                </div>
+                                <div class="task-status completed">已完成</div>
+                            </div>
+                            
+                            <div class="task-item active">
+                                <div class="task-checkbox"><i class="fas fa-spinner fa-spin"></i></div>
+                                <div class="task-info">
+                                    <h4>Python数据结构与算法</h4>
+                                    <p>掌握列表、元组、字典等数据结构及常用算法</p>
+                                    <a href="https://docs.python.org/zh-cn/3/tutorial/datastructures.html" class="task-link" target="_blank">学习资料</a>
+                                </div>
+                                <div class="task-status active">进行中</div>
+                            </div>
+                            
+                            <div class="task-item">
+                                <div class="task-checkbox"><i class="far fa-circle"></i></div>
+                                <div class="task-info">
+                                    <h4>Python文件操作与异常处理</h4>
+                                    <p>学习文件读写、异常捕获与处理</p>
+                                </div>
+                                <div class="task-status">未开始</div>
+                            </div>
+                            
+                            <div class="task-item">
+                                <div class="task-checkbox"><i class="far fa-circle"></i></div>
+                                <div class="task-info">
+                                    <h4>面向对象编程</h4>
+                                    <p>类与对象、继承、多态和封装</p>
+                                </div>
+                                <div class="task-status">未开始</div>
+                            </div>
+                            
+                            <div class="task-item">
+                                <div class="task-checkbox"><i class="far fa-circle"></i></div>
+                                <div class="task-info">
+                                    <h4>Python模块与包</h4>
+                                    <p>模块导入、创建和使用第三方库</p>
+                                </div>
+                                <div class="task-status">未开始</div>
+                            </div>
+                        </div>
+                        <div class="progress-container">
+                            <p><span>当前进度</span> <span>25%</span></p>
+                            <div class="progress-bar-container">
+                                <div class="progress" data-width="25%"></div>
+                            </div>
+                        </div>
+                        <div class="phase-rewards">
+                            <span class="reward-badge"><i class="fas fa-award"></i> Python入门徽章</span>
+                            <span class="reward-points">+200点数</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 第2阶段：数据科学与机器学习基础 -->
+                <div class="phase">
+                    <div class="phase-header">
+                        <div class="phase-number">2</div>
+                        <h3 class="phase-title">数据科学与机器学习基础</h3>
+                        <div class="phase-duration"><i class="far fa-clock"></i> 3-4个月</div>
+                        <div class="phase-toggle"><i class="fas fa-chevron-right"></i></div>
+                    </div>
+                    <div class="phase-content">
+                        <p>学习数据处理、统计分析以及基本的机器学习算法，建立AI领域的基础知识。</p>
+                        <div class="task-list">
+                            <div class="task-item">
+                                <div class="task-checkbox"><i class="far fa-circle"></i></div>
+                                <div class="task-info">
+                                    <h4>NumPy基础</h4>
+                                    <p>数值计算与数组操作</p>
+                                </div>
+                                <div class="task-status">未开始</div>
+                            </div>
+                            
+                            <div class="task-item">
+                                <div class="task-checkbox"><i class="far fa-circle"></i></div>
+                                <div class="task-info">
+                                    <h4>Pandas数据分析</h4>
+                                    <p>数据读取、清洗与预处理</p>
+                                </div>
+                                <div class="task-status">未开始</div>
+                            </div>
+                            
+                            <div class="task-item">
+                                <div class="task-checkbox"><i class="far fa-circle"></i></div>
+                                <div class="task-info">
+                                    <h4>数据可视化</h4>
+                                    <p>Matplotlib与Seaborn可视化库</p>
+                                </div>
+                                <div class="task-status">未开始</div>
+                            </div>
+                            
+                            <div class="task-item">
+                                <div class="task-checkbox"><i class="far fa-circle"></i></div>
+                                <div class="task-info">
+                                    <h4>统计学基础</h4>
+                                    <p>统计分析与假设检验</p>
+                                </div>
+                                <div class="task-status">未开始</div>
+                            </div>
+                            
+                            <div class="task-item">
+                                <div class="task-checkbox"><i class="far fa-circle"></i></div>
+                                <div class="task-info">
+                                    <h4>机器学习算法入门</h4>
+                                    <p>监督与无监督学习的基本算法</p>
+                                </div>
+                                <div class="task-status">未开始</div>
+                            </div>
+                            
+                            <div class="task-item">
+                                <div class="task-checkbox"><i class="far fa-circle"></i></div>
+                                <div class="task-info">
+                                    <h4>Scikit-learn框架实践</h4>
+                                    <p>使用Scikit-learn构建机器学习模型</p>
+                                </div>
+                                <div class="task-status">未开始</div>
+                            </div>
+                        </div>
+                        <div class="progress-container">
+                            <p><span>当前进度</span> <span>15%</span></p>
+                            <div class="progress-bar-container">
+                                <div class="progress" data-width="15%"></div>
+                            </div>
+                        </div>
+                        <div class="phase-rewards">
+                            <span class="reward-badge"><i class="fas fa-award"></i> 数据科学师徽章</span>
+                            <span class="reward-points">+300点数</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 第3阶段：深度学习框架与应用 -->
+                <div class="phase">
+                    <div class="phase-header">
+                        <div class="phase-number">3</div>
+                        <h3 class="phase-title">深度学习框架与应用</h3>
+                        <div class="phase-duration"><i class="far fa-clock"></i> 3-4个月</div>
+                        <div class="phase-toggle"><i class="fas fa-chevron-right"></i></div>
+                    </div>
+                    <div class="phase-content">
+                        <p>深入学习神经网络原理，掌握TensorFlow或PyTorch等深度学习框架，进行实际应用。</p>
+                        <div class="task-list">
+                            <div class="task-item">
+                                <div class="task-checkbox"><i class="far fa-circle"></i></div>
+                                <div class="task-info">
+                                    <h4>神经网络基础</h4>
+                                    <p>神经元、激活函数与反向传播</p>
+                                </div>
+                                <div class="task-status">未开始</div>
+                            </div>
+                            
+                            <div class="task-item">
+                                <div class="task-checkbox"><i class="far fa-circle"></i></div>
+                                <div class="task-info">
+                                    <h4>TensorFlow基础</h4>
+                                    <p>TensorFlow框架入门与基本操作</p>
+                                </div>
+                                <div class="task-status">未开始</div>
+                            </div>
+                            
+                            <div class="task-item">
+                                <div class="task-checkbox"><i class="far fa-circle"></i></div>
+                                <div class="task-info">
+                                    <h4>PyTorch基础</h4>
+                                    <p>PyTorch框架入门与基本操作</p>
+                                </div>
+                                <div class="task-status">未开始</div>
+                            </div>
+                            
+                            <div class="task-item">
+                                <div class="task-checkbox"><i class="far fa-circle"></i></div>
+                                <div class="task-info">
+                                    <h4>卷积神经网络(CNN)</h4>
+                                    <p>CNN架构、图像分类与目标检测</p>
+                                </div>
+                                <div class="task-status">未开始</div>
+                            </div>
+                            
+                            <div class="task-item">
+                                <div class="task-checkbox"><i class="far fa-circle"></i></div>
+                                <div class="task-info">
+                                    <h4>循环神经网络(RNN)</h4>
+                                    <p>RNN架构与自然语言处理应用</p>
+                                </div>
+                                <div class="task-status">未开始</div>
+                            </div>
+                            
+                            <div class="task-item">
+                                <div class="task-checkbox"><i class="far fa-circle"></i></div>
+                                <div class="task-info">
+                                    <h4>生成对抗网络(GAN)</h4>
+                                    <p>GAN架构与图像生成应用</p>
+                                </div>
+                                <div class="task-status">未开始</div>
+                            </div>
+                        </div>
+                        <div class="progress-container">
+                            <p><span>当前进度</span> <span>5%</span></p>
+                            <div class="progress-bar-container">
+                                <div class="progress" data-width="5%"></div>
+                            </div>
+                        </div>
+                        <div class="phase-rewards">
+                            <span class="reward-badge"><i class="fas fa-award"></i> 深度学习专家徽章</span>
+                            <span class="reward-points">+500点数</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 第4阶段：实战项目与应用开发 -->
+                <div class="phase">
+                    <div class="phase-header">
+                        <div class="phase-number">4</div>
+                        <h3 class="phase-title">实战项目与应用开发</h3>
+                        <div class="phase-duration"><i class="far fa-clock"></i> 2-3个月</div>
+                        <div class="phase-toggle"><i class="fas fa-chevron-right"></i></div>
+                    </div>
+                    <div class="phase-content">
+                        <p>通过独立项目实践，将所学知识应用到实际场景中，构建完整的AI应用。</p>
+                        <div class="task-list">
+                            <div class="task-item">
+                                <div class="task-checkbox"><i class="far fa-circle"></i></div>
+                                <div class="task-info">
+                                    <h4>项目规划与设计</h4>
+                                    <p>问题定义、目标设定与方案设计</p>
+                                </div>
+                                <div class="task-status">未开始</div>
+                            </div>
+                            
+                            <div class="task-item">
+                                <div class="task-checkbox"><i class="far fa-circle"></i></div>
+                                <div class="task-info">
+                                    <h4>数据收集与处理</h4>
+                                    <p>数据获取、清洗与特征工程</p>
+                                </div>
+                                <div class="task-status">未开始</div>
+                            </div>
+                            
+                            <div class="task-item">
+                                <div class="task-checkbox"><i class="far fa-circle"></i></div>
+                                <div class="task-info">
+                                    <h4>模型开发与训练</h4>
+                                    <p>选择合适的模型架构并进行训练</p>
+                                </div>
+                                <div class="task-status">未开始</div>
+                            </div>
+                            
+                            <div class="task-item">
+                                <div class="task-checkbox"><i class="far fa-circle"></i></div>
+                                <div class="task-info">
+                                    <h4>模型优化与评估</h4>
+                                    <p>性能评估与模型调优</p>
+                                </div>
+                                <div class="task-status">未开始</div>
+                            </div>
+                            
+                            <div class="task-item">
+                                <div class="task-checkbox"><i class="far fa-circle"></i></div>
+                                <div class="task-info">
+                                    <h4>应用部署</h4>
+                                    <p>模型集成与Web应用开发</p>
+                                </div>
+                                <div class="task-status">未开始</div>
+                            </div>
+                            
+                            <div class="task-item">
+                                <div class="task-checkbox"><i class="far fa-circle"></i></div>
+                                <div class="task-info">
+                                    <h4>项目展示与评估</h4>
+                                    <p>项目演示、文档编写与成果评估</p>
+                                </div>
+                                <div class="task-status">未开始</div>
+                            </div>
+                        </div>
+                        <div class="progress-container">
+                            <p><span>当前进度</span> <span>0%</span></p>
+                            <div class="progress-bar-container">
+                                <div class="progress" data-width="0%"></div>
+                            </div>
+                        </div>
+                        <div class="phase-rewards">
+                            <span class="reward-badge"><i class="fas fa-award"></i> AI构建师徽章</span>
+                            <span class="reward-points">+1000点数</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 课程资源区域 -->
+    <section id="courses" class="section courses">
+        <div class="container">
+            <h2 class="section-title">学习资源</h2>
+            
+            <!-- 课程分类过滤器 -->
+            <div class="course-filters">
+                <button class="filter-btn active" data-filter="all">全部</button>
+                <button class="filter-btn" data-filter="online">在线课程</button>
+                <button class="filter-btn" data-filter="book">经典书籍</button>
+                <button class="filter-btn" data-filter="project">开源项目</button>
+                <button class="filter-btn" data-filter="community">社区论坛</button>
+            </div>
+            
+            <!-- 课程卡片网格 -->
+            <div class="course-grid">
+                <!-- 在线课程卡片 -->
+                <div class="course-card" data-category="online">
+                    <div class="course-image">
+                        <img src="https://images.unsplash.com/photo-1516397281156-ca07cf9746fc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80" alt="Python 数据科学基础">
+                    </div>
+                    <div class="course-category">在线课程</div>
+                    <div class="course-content">
+                        <h3 class="course-title">Python 数据科学基础</h3>
+                        <p class="course-description">系统学习Python数据分析的基础知识，包括NumPy、Pandas和Matplotlib等工具库的使用。</p>
+                        <div class="course-meta">
+                            <div class="course-rewards">
+                                <span class="reward-exp"><i class="fas fa-bolt"></i> +20经验</span>
+                                <span class="reward-points"><i class="fas fa-coins"></i> +50点数</span>
+                            </div>
+                            <a href="https://docs.python.org/zh-cn/3/tutorial/index.html" class="course-action-btn" target="_blank">前往学习 <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 经典书籍卡片 -->
+                <div class="course-card" data-category="book">
+                    <div class="course-image">
+                        <img src="https://images.unsplash.com/photo-1544383835-bda2bc66a55d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80" alt="机器学习实战">
+                    </div>
+                    <div class="course-category">经典书籍</div>
+                    <div class="course-content">
+                        <h3 class="course-title">《机器学习实战》</h3>
+                        <p class="course-description">通过实际案例讲解机器学习算法，从理论到实践的完美结合。</p>
+                        <div class="course-meta">
+                            <div class="course-rewards">
+                                <span class="reward-exp"><i class="fas fa-bolt"></i> +30经验</span>
+                                <span class="reward-points"><i class="fas fa-coins"></i> +75点数</span>
+                            </div>
+                            <a href="#" class="course-action-btn">了解详情 <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 开源项目卡片 -->
+                <div class="course-card" data-category="project">
+                    <div class="course-image">
+                        <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80" alt="Kaggle 数据竞赛">
+                    </div>
+                    <div class="course-category">开源项目</div>
+                    <div class="course-content">
+                        <h3 class="course-title">Kaggle 数据竞赛</h3>
+                        <p class="course-description">参与实际的数据科学竞赛，提高模型构建和算法应用能力。</p>
+                        <div class="course-meta">
+                            <div class="course-rewards">
+                                <span class="reward-exp"><i class="fas fa-bolt"></i> +50经验</span>
+                                <span class="reward-points"><i class="fas fa-coins"></i> +100点数</span>
+                            </div>
+                            <a href="https://www.kaggle.com/" class="course-action-btn" target="_blank">参与项目 <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 社区论坛卡片 -->
+                <div class="course-card" data-category="community">
+                    <div class="course-image">
+                        <img src="https://images.unsplash.com/photo-1573164574511-73c773193279?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80" alt="AI研究社区">
+                    </div>
+                    <div class="course-category">社区论坛</div>
+                    <div class="course-content">
+                        <h3 class="course-title">AI研究社区</h3>
+                        <p class="course-description">与全球AI爱好者交流，分享学习心得，解决技术难题。</p>
+                        <div class="course-meta">
+                            <div class="course-rewards">
+                                <span class="reward-exp"><i class="fas fa-bolt"></i> +15经验</span>
+                                <span class="reward-points"><i class="fas fa-coins"></i> +25点数</span>
+                            </div>
+                            <a href="#" class="course-action-btn">加入社区 <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 游戏化系统 -->
+    <section id="game-elements" class="section game-elements">
+        <div class="container">
+            <h2 class="section-title">AI学习游戏系统</h2>
+            <p class="section-description">通过游戏化学习提高你的学习动力和成就感，记录你的AI学习之旅</p>
+            
+            <div class="game-elements-grid">
+                <div class="game-element-card">
+                    <div class="game-element-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h3>等级系统</h3>
+                    <p>完成学习任务获得经验值，提升你的AI学习等级。每升一级解锁新的学习内容和奖励。</p>
+                    <div class="level-showcase">
+                        <div class="level-item current">
+                            <span class="level-number">1</span>
+                            <span class="level-name">初学者</span>
+                        </div>
+                        <div class="level-arrow"><i class="fas fa-arrow-right"></i></div>
+                        <div class="level-item next">
+                            <span class="level-number">2</span>
+                            <span class="level-name">学徒</span>
+                        </div>
+                        <div class="level-arrow"><i class="fas fa-arrow-right"></i></div>
+                        <div class="level-item">
+                            <span class="level-number">3</span>
+                            <span class="level-name">探索者</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="game-element-card">
+                    <div class="game-element-icon">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    <h3>技能树</h3>
+                    <p>解锁和提升不同技能，构建你的AI专业技能树。技能之间相互关联，掌握基础技能解锁高级技能。</p>
+                    <div class="skill-tree-preview">
+                        <div class="skill-node unlocked">
+                            <i class="fas fa-code"></i>
+                            <span>Python基础</span>
+                        </div>
+                        <div class="skill-branch"></div>
+                        <div class="skill-node in-progress">
+                            <i class="fas fa-database"></i>
+                            <span>数据处理</span>
+                        </div>
+                        <div class="skill-branch"></div>
+                        <div class="skill-node locked">
+                            <i class="fas fa-brain"></i>
+                            <span>神经网络</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="game-element-card">
+                    <div class="game-element-icon">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <h3>任务系统</h3>
+                    <p>完成日常学习任务和挑战，获得经验值和编程点数奖励。任务难度从简单到困难，满足不同学习阶段。</p>
+                    <div class="tasks-preview">
+                        <div class="task-item">
+                            <div class="task-checkbox"><i class="fas fa-check"></i></div>
+                            <div class="task-info">
+                                <h4>完成Python基础课程</h4>
+                                <div class="task-rewards">
+                                    <span><i class="fas fa-bolt"></i> +50经验</span>
+                                    <span><i class="fas fa-coins"></i> +20点数</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="task-item active">
+                            <div class="task-checkbox"></div>
+                            <div class="task-info">
+                                <h4>完成NumPy练习</h4>
+                                <div class="task-progress"><div style="width:60%"></div></div>
+                                <div class="task-rewards">
+                                    <span><i class="fas fa-bolt"></i> +30经验</span>
+                                    <span><i class="fas fa-coins"></i> +15点数</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="game-element-card">
+                    <div class="game-element-icon">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                    <h3>成就系统</h3>
+                    <p>完成特定挑战获得独特徽章，展示你的技能和成就。收集不同类型的徽章，成为AI领域的佼佼者。</p>
+                    <div class="achievements-preview">
+                        <div class="achievement-badge unlocked">
+                            <div class="badge-icon"><i class="fas fa-code"></i></div>
+                            <span>代码大师</span>
+                        </div>
+                        <div class="achievement-badge unlocked">
+                            <div class="badge-icon"><i class="fas fa-chart-line"></i></div>
+                            <span>数据分析师</span>
+                        </div>
+                        <div class="achievement-badge locked">
+                            <div class="badge-icon"><i class="fas fa-robot"></i></div>
+                            <span>AI构建师</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-about">
+                    <div class="footer-logo"><i class="fas fa-brain"></i>AI学习之旅</div>
+                    <p>我们致力于为零基础学习者提供系统化的AI编程学习路径，帮助你从入门到精通。</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-weixin"></i></a>
+                        <a href="#"><i class="fab fa-weibo"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-bilibili"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>快速链接</h4>
+                    <ul>
+                        <li><a href="#hero">首页</a></li>
+                        <li><a href="#learning-path">学习路径</a></li>
+                        <li><a href="#resources">学习资源</a></li>
+                        <li><a href="#game-elements">游戏中心</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>学习资源</h4>
+                    <ul>
+                        <li><a href="#">Python基础</a></li>
+                        <li><a href="#">机器学习</a></li>
+                        <li><a href="#">深度学习</a></li>
+                        <li><a href="#">项目实战</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>帮助支持</h4>
+                    <ul>
+                        <li><a href="#">学习指南</a></li>
+                        <li><a href="#">常见问题</a></li>
+                        <li><a href="#">技术支持</a></li>
+                        <li><a href="#">关于我们</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2023 AI学习之旅 | 设计与开发由 <a href="#">AI学习团队</a> 提供
+            </div>
+        </div>
+    </footer>
+
+    <!-- 返回顶部按钮 -->
+    <button id="back-to-top" title="返回顶部"><i class="fas fa-arrow-up"></i></button>
+
+    <!-- 成就通知 -->
+    <div id="achievement-popup" class="achievement-popup">
+        <div class="achievement-icon">
+            <i class="fas fa-award"></i>
+        </div>
+        <div class="achievement-content">
+            <h3>成就解锁！</h3>
+            <p>恭喜你获得了"Python入门"徽章</p>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html> 
