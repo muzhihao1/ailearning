@@ -729,5 +729,28 @@
 
     <!-- JavaScript -->
     <script src="script.js"></script>
+    
+    <!-- Firebase配置 (在部署前需要添加您的Firebase项目信息) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script>
+        // 页面加载完成后初始化Firebase(如果启用)
+        document.addEventListener('DOMContentLoaded', function() {
+            // 检查是否存在有效的Firebase配置
+            if (typeof initFirebase === 'function') {
+                // 初始化Firebase
+                try {
+                    initFirebase();
+                } catch (error) {
+                    console.warn('Firebase初始化失败:', error);
+                    console.info('网站将使用本地存储模式运行');
+                }
+            } else {
+                console.info('未找到Firebase配置，网站将使用本地存储模式运行');
+            }
+        });
+    </script>
 </body>
 </html> 

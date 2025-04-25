@@ -564,6 +564,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 课程过滤功能
     initCourseFilters();
+
+    // 初始化数据管理功能
+    initDataManagement();
 });
 
 function initPhaseToggle() {
@@ -1032,4 +1035,366 @@ function initCourseFilters() {
             });
         });
     });
+}
+
+// 添加用户数据管理功能
+function initDataManagement() {
+    // 创建设置面板
+    createSettingsPanel();
+    
+    // 初始化按钮事件
+    const exportBtn = document.getElementById('export-data');
+    const importBtn = document.getElementById('import-data');
+    const resetAllBtn = document.getElementById('reset-all-progress');
+    
+    if (exportBtn) {
+        exportBtn.addEventListener('click', exportUserData);
+    }
+    
+    if (importBtn) {
+        importBtn.addEventListener('click', importUserData);
+    }
+    
+    if (resetAllBtn) {
+        resetAllBtn.addEventListener('click', resetAllProgress);
+    }
+    
+    // 初始化阶段重置按钮
+    for (let i = 1; i <= 4; i++) {
+        const phaseResetBtn = document.getElementById(`reset-phase-${i}`);
+        if (phaseResetBtn) {
+            phaseResetBtn.addEventListener('click', function() {
+                resetPhaseProgress(i);
+            });
+        }
+    }
+}
+
+// 创建设置面板
+function createSettingsPanel() {
+    // 检查是否已存在设置面板
+    if (document.getElementById('settings-panel')) {
+        return;
+    }
+    
+    // 创建设置按钮
+    const settingsBtn = document.createElement('button');
+    settingsBtn.id = 'settings-button';
+    settingsBtn.innerHTML = '<i class="fas fa-cog"></i>';
+    settingsBtn.title = '设置';
+    settingsBtn.className = 'settings-toggle-btn';
+    document.body.appendChild(settingsBtn);
+    
+    // 创建设置面板
+    const settingsPanel = document.createElement('div');
+    settingsPanel.id = 'settings-panel';
+    settingsPanel.className = 'settings-panel';
+    settingsPanel.innerHTML = `
+        <div class="settings-header">
+            <h3>学习进度管理</h3>
+            <button class="settings-close-btn"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="settings-content">
+            <div class="settings-group">
+                <h4>数据备份与恢复</h4>
+                <p class="settings-desc">导出学习数据以备份，或导入之前的备份恢复学习进度。</p>
+                <div class="settings-actions">
+                    <button id="export-data" class="btn btn-secondary">导出数据</button>
+                    <button id="import-data" class="btn btn-secondary">导入数据</button>
+                </div>
+            </div>
+            
+            <div class="settings-group">
+                <h4>重置学习进度</h4>
+                <p class="settings-desc">重置特定阶段或所有学习进度。此操作不可恢复！</p>
+                <div class="settings-actions">
+                    <button id="reset-all-progress" class="btn btn-danger">重置所有进度</button>
+                </div>
+                <div class="phase-reset-buttons">
+                    <button id="reset-phase-1" class="btn btn-warning">重置第1阶段</button>
+                    <button id="reset-phase-2" class="btn btn-warning">重置第2阶段</button>
+                    <button id="reset-phase-3" class="btn btn-warning">重置第3阶段</button>
+                    <button id="reset-phase-4" class="btn btn-warning">重置第4阶段</button>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(settingsPanel);
+    
+    // 绑定设置按钮点击事件
+    settingsBtn.addEventListener('click', function() {
+        settingsPanel.classList.toggle('show');
+    });
+    
+    // 绑定关闭按钮事件
+    const closeBtn = settingsPanel.querySelector('.settings-close-btn');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+            settingsPanel.classList.remove('show');
+        });
+    }
+    
+    // 添加设置面板样式
+    addSettingsPanelStyles();
+}
+
+// 添加设置面板样式
+function addSettingsPanelStyles() {
+    const styleElement = document.createElement('style');
+    styleElement.textContent = `
+        .settings-toggle-btn {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 990;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            transition: var(--transition);
+        }
+        
+        .settings-toggle-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .settings-panel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            width: 90%;
+            max-width: 500px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .settings-panel.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .settings-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: var(--dark-color);
+        }
+        
+        .settings-close-btn {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            color: var(--gray-color);
+            cursor: pointer;
+        }
+        
+        .settings-content {
+            padding: 1.5rem;
+        }
+        
+        .settings-group {
+            margin-bottom: 2rem;
+        }
+        
+        .settings-group h4 {
+            font-size: 1.2rem;
+            margin-bottom: 0.75rem;
+            color: var(--dark-color);
+        }
+        
+        .settings-desc {
+            color: var(--gray-color);
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+        
+        .settings-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+        
+        .phase-reset-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+        
+        .btn-danger {
+            background-color: var(--error-color);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #d63031;
+        }
+        
+        .btn-warning {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background-color: #e67e22;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .settings-panel {
+                background-color: #1a202c;
+            }
+            
+            .settings-header {
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            .settings-header h3 {
+                color: white;
+            }
+            
+            .settings-group h4 {
+                color: white;
+            }
+        }
+    `;
+    document.head.appendChild(styleElement);
+}
+
+// 导出用户数据
+function exportUserData() {
+    const userData = {
+        learningHistory: JSON.parse(localStorage.getItem('learningHistory') || '[]'),
+        completedTasks: JSON.parse(localStorage.getItem('completedTasks') || '[]'),
+        userLevel: localStorage.getItem('userLevel'),
+        userExp: localStorage.getItem('userExp'),
+        codePoints: localStorage.getItem('codePoints'),
+        streakDays: localStorage.getItem('streakDays'),
+        timestamp: new Date().toISOString()
+    };
+    
+    // 创建一个下载链接
+    const dataStr = JSON.stringify(userData, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `ai-learning-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    showNotification('数据导出成功', '学习进度已保存到本地文件');
+}
+
+// 导入用户数据
+function importUserData() {
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = 'application/json';
+    
+    fileInput.onchange = function(e) {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        
+        reader.onload = function(event) {
+            try {
+                const userData = JSON.parse(event.target.result);
+                
+                // 验证数据格式
+                if (!userData.learningHistory || !userData.completedTasks) {
+                    throw new Error('无效的数据格式');
+                }
+                
+                // 保存导入的数据
+                localStorage.setItem('learningHistory', JSON.stringify(userData.learningHistory));
+                localStorage.setItem('completedTasks', JSON.stringify(userData.completedTasks));
+                
+                if (userData.userLevel) localStorage.setItem('userLevel', userData.userLevel);
+                if (userData.userExp) localStorage.setItem('userExp', userData.userExp);
+                if (userData.codePoints) localStorage.setItem('codePoints', userData.codePoints);
+                if (userData.streakDays) localStorage.setItem('streakDays', userData.streakDays);
+                
+                // 显示成功通知
+                showNotification('数据导入成功', '你的学习记录已恢复');
+                
+                // 延迟刷新页面，以便用户看到通知
+                setTimeout(() => window.location.reload(), 2000);
+                
+            } catch (error) {
+                showNotification('导入失败', error.message);
+            }
+        };
+        
+        reader.readAsText(file);
+    };
+    
+    fileInput.click();
+}
+
+// 重置全部学习进度
+function resetAllProgress() {
+    if (confirm('确定要重置所有学习进度吗？此操作不可恢复！')) {
+        // 清除所有相关的本地存储项
+        localStorage.removeItem('learningHistory');
+        localStorage.removeItem('currentLearning');
+        localStorage.removeItem('completedTasks');
+        localStorage.removeItem('userLevel');
+        localStorage.removeItem('userExp');
+        localStorage.removeItem('codePoints');
+        localStorage.removeItem('streakDays');
+        
+        // 刷新页面以应用更改
+        showNotification('进度已重置', '所有学习进度已成功重置');
+        
+        // 延迟刷新页面，以便用户看到通知
+        setTimeout(() => window.location.reload(), 2000);
+    }
+}
+
+// 重置特定阶段的进度
+function resetPhaseProgress(phaseNumber) {
+    if (confirm(`确定要重置第${phaseNumber}阶段的所有进度吗？`)) {
+        // 获取已完成任务
+        const completedTasks = JSON.parse(localStorage.getItem('completedTasks') || '[]');
+        
+        // 筛选出非该阶段的任务
+        const filteredTasks = completedTasks.filter(task => {
+            return !task.title.includes(`第${phaseNumber}阶段`);
+        });
+        
+        // 保存过滤后的任务
+        localStorage.setItem('completedTasks', JSON.stringify(filteredTasks));
+        
+        // 显示通知
+        showNotification('阶段进度已重置', `第${phaseNumber}阶段的进度已成功重置`);
+        
+        // 延迟刷新页面
+        setTimeout(() => window.location.reload(), 2000);
+    }
 } 
