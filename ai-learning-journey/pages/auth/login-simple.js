@@ -31,9 +31,9 @@ export default function SimpleLoginPage() {
         setMessage('登录成功!');
         console.log('登录用户数据:', data);
         
-        // 登录成功后重定向
+        // 登录成功后重定向到主页
         setTimeout(() => {
-          router.push('/demo-home');
+          router.push('/');
         }, 1000);
       }
     } catch (err) {
@@ -90,7 +90,7 @@ export default function SimpleLoginPage() {
       </form>
       
       <div style={{ marginTop: '20px', textAlign: 'center' }}>
-        <Link href="/demo-home" style={{ color: '#4f46e5', textDecoration: 'none' }}>返回首页</Link>
+        <Link href="/" style={{ color: '#4f46e5', textDecoration: 'none' }}>返回首页</Link>
         {' | '}
         <Link href="/auth/register-simple" style={{ color: '#4f46e5', textDecoration: 'none' }}>注册账号</Link>
       </div>

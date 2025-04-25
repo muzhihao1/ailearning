@@ -9,18 +9,11 @@ export default function Layout({ children, title = 'AI学习之旅 | 从零开�
   const router = useRouter();
   const supabase = useSupabaseClient();
 
-  // 验证用户身份 - 某些页面需要登录
+  // 注意：主要的身份验证逻辑已经移至_app.js中的AuthWrapper组件
+  // 这里只保留登录后对登录/注册页面的重定向逻辑
   useEffect(() => {
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      
-      // 需要认证的页面路径
-      const authRequiredPaths = ['/dashboard', '/profile', '/tasks'];
-      
-      // 如果是需要认证的页面且没有登录，则重定向到登录页
-      if (authRequiredPaths.includes(router.pathname) && !session) {
-        router.push('/auth/login-simple');
-      }
       
       // 如果是登录页但已经登录，则重定向到仪表板
       if ((router.pathname === '/login' || router.pathname === '/register' ||
