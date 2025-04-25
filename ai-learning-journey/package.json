@@ -1,0 +1,30 @@
+{
+  "name": "ai-learning-journey",
+  "version": "1.0.0",
+  "description": "游戏化AI学习平台",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@supabase/auth-helpers-nextjs": "^0.7.0",
+    "@supabase/auth-helpers-react": "^0.4.0",
+    "@supabase/supabase-js": "^2.21.0",
+    "next": "^13.4.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tailwindcss": "^3.3.2",
+    "postcss": "^8.4.23",
+    "autoprefixer": "^10.4.14"
+  },
+  "devDependencies": {
+    "eslint": "^8.40.0",
+    "eslint-config-next": "^13.4.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+} 

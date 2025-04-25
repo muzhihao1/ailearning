@@ -1,47 +1,131 @@
-# AI学习之旅网站
+# AI学习之旅 - 游戏化AI学习平台
 
-这是一个专注于AI学习路径的静态网站，为零基础学习者提供结构化的学习计划。
+AI学习之旅是一个游戏化的AI编程学习平台，为零基础学习者提供系统化的AI学习路径。通过游戏化元素如经验值、等级、连续学习（streak）和成就系统，使学习过程更有趣更有成就感。
 
-## 功能
+## 技术栈
 
-- 提供分阶段的AI学习路径
-- 推荐高质量学习资源
-- 可视化学习进程
+- **前端框架**: Next.js
+- **样式**: TailwindCSS
+- **认证与数据库**: Supabase
+- **部署**: Vercel
 
-## 如何使用
+## 主要功能
 
-1. 克隆仓库到本地
-```bash
-git clone [your-repository-url]
-```
+- 用户注册和认证系统
+- 个性化学习仪表板
+- 分阶段学习路径
+- 任务完成与经验值系统
+- 连续学习（streak）机制
+- 成就解锁系统
+- 学习资源推荐
+- 本地数据迁移到云端
 
-2. 直接在浏览器中打开`index.html`文件
-   或者使用简单的HTTP服务器：
-```bash
-# 如果有Python
-python -m http.server
-# 然后访问 http://localhost:8000
-```
+## 安装与设置
 
-3. 也可以直接访问GitHub Pages部署的版本
+### 前提条件
+
+- Node.js 14.x 或更高版本
+- NPM 或 Yarn
+- Supabase 账户
+
+### 安装步骤
+
+1. 克隆仓库
+   ```bash
+   git clone https://github.com/yourusername/ai-learning-journey.git
+   cd ai-learning-journey
+   ```
+
+2. 安装依赖
+   ```bash
+   npm install
+   # 或
+   yarn install
+   ```
+
+3. 创建环境变量文件
+   创建一个名为`.env.local`的文件，添加以下内容：
+   ```
+   NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+   ```
+
+4. 在Supabase中设置数据库表结构
+   - 使用部署文档中的SQL脚本创建所需的表和策略
+   - 或者使用Supabase界面手动创建表结构
+
+5. 运行开发服务器
+   ```bash
+   npm run dev
+   # 或
+   yarn dev
+   ```
+
+## 部署到Vercel
+
+1. 在GitHub上创建一个仓库并推送代码
+2. 在Vercel上注册/登录
+3. 导入GitHub仓库
+4. 配置环境变量（Supabase URL和密钥）
+5. 点击"Deploy"按钮
+
+## 数据迁移
+
+如果您之前使用的是localStorage版本的平台，可以使用数据导入功能：
+
+1. 登录到您的账户
+2. 访问 `/import-data` 页面
+3. 按照页面指引导入您的本地数据到云端
 
 ## 项目结构
 
 ```
-ai-learning-journey/
-├── index.html      # 主页面
-├── css/            # 样式文件
-│   └── style.css
-├── js/             # JavaScript文件
-│   └── script.js
-└── images/         # 图片资源
+/components        - React组件
+  /layout          - 布局组件（Header, Footer等）
+  /learning        - 学习相关组件
+  /gamification    - 游戏化元素组件
+  /ui              - 通用UI组件
+/pages             - Next.js页面
+  /api             - API路由
+  /auth            - 认证相关页面
+/lib               - 工具函数和Supabase客户端
+/styles            - 全局样式
+/public            - 静态资源
 ```
 
-## 部署
+## 自定义与扩展
 
-此网站设计为可以直接部署到GitHub Pages。
-克隆仓库后，启用GitHub Pages功能即可。
+### 添加新任务
 
-## 许可
+在Supabase的`tasks`表中添加新任务，包括：
+- 任务标题
+- 描述
+- 所属阶段（phase）
+- 经验值奖励
+- 点数奖励
 
-MIT 
+### 修改游戏化机制
+
+游戏化机制的主要逻辑在以下文件中：
+- `/lib/supabase.js` - 任务完成和连续学习逻辑
+- `/pages/api/tasks/complete.js` - 任务完成API
+- `/pages/api/user/update-streak.js` - 连续学习更新API
+
+## 贡献
+
+欢迎提交问题和改进建议。如需贡献代码，请遵循以下步骤：
+1. Fork本仓库
+2. 创建您的功能分支 (`git checkout -b feature/amazing-feature`)
+3. 提交您的更改 (`git commit -m 'Add some amazing feature'`)
+4. 推送到分支 (`git push origin feature/amazing-feature`)
+5. 开启Pull Request
+
+## 许可证
+
+本项目采用MIT许可证。详见 `LICENSE` 文件。
+
+## 联系我们
+
+如有问题或建议，请通过以下方式联系我们：
+- 邮件: your-email@example.com
+- 微信: your-wechat-id 

@@ -681,7 +681,7 @@
                     <ul>
                         <li><a href="#hero">首页</a></li>
                         <li><a href="#learning-path">学习路径</a></li>
-                        <li><a href="#resources">学习资源</a></li>
+                        <li><a href="#courses">学习资源</a></li>
                         <li><a href="#game-elements">游戏中心</a></li>
                     </ul>
                 </div>
@@ -701,7 +701,7 @@
                     <ul>
                         <li><a href="#">学习指南</a></li>
                         <li><a href="#">常见问题</a></li>
-                        <li><a href="#">技术支持</a></li>
+                        <li><a href="#" id="open-settings">设置与数据</a></li>
                         <li><a href="#">关于我们</a></li>
                     </ul>
                 </div>
@@ -726,31 +726,61 @@
             <p>恭喜你获得了"Python入门"徽章</p>
         </div>
     </div>
+    
+    <!-- 设置面板 -->
+    <div id="settings-modal" class="settings-modal">
+        <div class="settings-container">
+            <div class="settings-header">
+                <h2>设置与数据</h2>
+                <button id="close-settings" class="close-btn"><i class="fas fa-times"></i></button>
+            </div>
+            
+            <div class="settings-content">
+                <div class="settings-panel">
+                    <h3>学习进度管理</h3>
+                    <div class="settings-group">
+                        <button id="reset-all-progress" class="btn btn-danger">重置所有进度</button>
+                        <p class="settings-desc">清除所有学习记录、经验值和点数。此操作不可恢复！</p>
+                    </div>
+                    
+                    <div class="settings-group">
+                        <h4>重置特定阶段</h4>
+                        <div class="phase-reset-buttons">
+                            <button data-phase="1" class="btn btn-warning phase-reset-btn">重置第1阶段</button>
+                            <button data-phase="2" class="btn btn-warning phase-reset-btn">重置第2阶段</button>
+                            <button data-phase="3" class="btn btn-warning phase-reset-btn">重置第3阶段</button>
+                            <button data-phase="4" class="btn btn-warning phase-reset-btn">重置第4阶段</button>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-group">
+                        <h4>数据备份与恢复</h4>
+                        <button id="export-data" class="btn btn-secondary">导出数据</button>
+                        <button id="import-data" class="btn btn-secondary">导入数据</button>
+                        <p class="settings-desc">导出您的学习记录以便在其他设备上恢复，或者导入之前备份的数据。</p>
+                    </div>
+                </div>
+                
+                <div class="settings-panel">
+                    <h3>账户信息</h3>
+                    <div class="settings-group">
+                        <div class="user-info">
+                            <p><strong>用户ID:</strong> <span id="user-id">本地用户</span></p>
+                            <p><strong>学习开始于:</strong> <span id="learning-start-date">-</span></p>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-group">
+                        <h4>连接云存储 (即将推出)</h4>
+                        <p class="settings-desc">即将支持跨设备同步您的学习进度和成就。</p>
+                        <button class="btn btn-primary" disabled>连接账户</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- JavaScript -->
     <script src="script.js"></script>
-    
-    <!-- Firebase配置 (在部署前需要添加您的Firebase项目信息) -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="firebase-config.js"></script>
-    <script>
-        // 页面加载完成后初始化Firebase(如果启用)
-        document.addEventListener('DOMContentLoaded', function() {
-            // 检查是否存在有效的Firebase配置
-            if (typeof initFirebase === 'function') {
-                // 初始化Firebase
-                try {
-                    initFirebase();
-                } catch (error) {
-                    console.warn('Firebase初始化失败:', error);
-                    console.info('网站将使用本地存储模式运行');
-                }
-            } else {
-                console.info('未找到Firebase配置，网站将使用本地存储模式运行');
-            }
-        });
-    </script>
 </body>
 </html> 

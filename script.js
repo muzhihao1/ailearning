@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM加载完成，开始初始化...');
+    
     // 平滑滚动
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
@@ -221,20 +223,21 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // 游戏化元素 - 学习连续天数动画
-    const streakDaysElement = document.getElementById('streak-days');
-    if (streakDaysElement) {
-        let count = 0;
-        const streakDays = 7; // 假设连续学习了7天
-        
-        const streakCounter = setInterval(() => {
-            count++;
-            if (count > streakDays) {
-                clearInterval(streakCounter);
-            } else {
-                streakDaysElement.textContent = count;
-            }
-        }, 200);
-    }
+    // 这部分代码已经被新的updateStreakDays()函数替代
+    // const streakDaysElement = document.getElementById('streak-days');
+    // if (streakDaysElement) {
+    //     let count = 0;
+    //     const streakDays = 7; // 假设连续学习了7天
+    //     
+    //     const streakCounter = setInterval(() => {
+    //         count++;
+    //         if (count > streakDays) {
+    //             clearInterval(streakCounter);
+    //         } else {
+    //             streakDaysElement.textContent = count;
+    //         }
+    //     }, 200);
+    // }
 
     // 游戏化元素 - 成就弹窗
     const achievementPopup = document.getElementById('achievement-popup');
@@ -565,8 +568,22 @@ document.addEventListener('DOMContentLoaded', function() {
     // 课程过滤功能
     initCourseFilters();
 
-    // 初始化数据管理功能
+    // 添加设置面板和数据管理功能
+    console.log('正在初始化设置面板...');
+    initSettingsPanel();
+    
+    // 数据管理功能
+    console.log('正在初始化数据管理功能...');
     initDataManagement();
+    
+    // 显示用户ID和学习起始日期
+    displayUserInfo();
+
+    // 添加调用检查和更新streak天数的函数
+    updateStreakDays();
+    
+    // 初始化完成任务按钮
+    initCompleteTaskButtons();
 });
 
 function initPhaseToggle() {
@@ -737,12 +754,6 @@ function saveCurrentLearning(learningData) {
     localStorage.setItem('learningHistory', JSON.stringify(learningHistory));
     localStorage.setItem('currentLearning', JSON.stringify(learningData));
 }
-
-// 添加任务完成按钮事件处理
-document.addEventListener('DOMContentLoaded', function() {
-    // 初始化完成任务按钮
-    initCompleteTaskButtons();
-});
 
 // 初始化完成任务按钮
 function initCompleteTaskButtons() {
@@ -996,6 +1007,9 @@ function saveTaskCompletion(taskTitle, expValue, pointsValue) {
     });
     
     localStorage.setItem('completedTasks', JSON.stringify(completedTasks));
+    
+    // 更新连续学习天数
+    updateStreakDays();
 }
 
 function initCourseFilters() {
@@ -1037,263 +1051,214 @@ function initCourseFilters() {
     });
 }
 
-// 添加用户数据管理功能
-function initDataManagement() {
-    // 创建设置面板
-    createSettingsPanel();
+// 初始化设置面板控制
+function initSettingsPanel() {
+    console.log('初始化设置面板...');
     
-    // 初始化按钮事件
-    const exportBtn = document.getElementById('export-data');
-    const importBtn = document.getElementById('import-data');
-    const resetAllBtn = document.getElementById('reset-all-progress');
+    const settingsModal = document.getElementById('settings-modal');
+    const openSettingsBtn = document.getElementById('open-settings');
+    const closeSettingsBtn = document.getElementById('close-settings');
     
-    if (exportBtn) {
-        exportBtn.addEventListener('click', exportUserData);
-    }
-    
-    if (importBtn) {
-        importBtn.addEventListener('click', importUserData);
-    }
-    
-    if (resetAllBtn) {
-        resetAllBtn.addEventListener('click', resetAllProgress);
-    }
-    
-    // 初始化阶段重置按钮
-    for (let i = 1; i <= 4; i++) {
-        const phaseResetBtn = document.getElementById(`reset-phase-${i}`);
-        if (phaseResetBtn) {
-            phaseResetBtn.addEventListener('click', function() {
-                resetPhaseProgress(i);
-            });
-        }
-    }
-}
-
-// 创建设置面板
-function createSettingsPanel() {
-    // 检查是否已存在设置面板
-    if (document.getElementById('settings-panel')) {
+    if (!settingsModal) {
+        console.error('找不到settings-modal元素!');
         return;
     }
     
-    // 创建设置按钮
-    const settingsBtn = document.createElement('button');
-    settingsBtn.id = 'settings-button';
-    settingsBtn.innerHTML = '<i class="fas fa-cog"></i>';
-    settingsBtn.title = '设置';
-    settingsBtn.className = 'settings-toggle-btn';
-    document.body.appendChild(settingsBtn);
-    
-    // 创建设置面板
-    const settingsPanel = document.createElement('div');
-    settingsPanel.id = 'settings-panel';
-    settingsPanel.className = 'settings-panel';
-    settingsPanel.innerHTML = `
-        <div class="settings-header">
-            <h3>学习进度管理</h3>
-            <button class="settings-close-btn"><i class="fas fa-times"></i></button>
-        </div>
-        <div class="settings-content">
-            <div class="settings-group">
-                <h4>数据备份与恢复</h4>
-                <p class="settings-desc">导出学习数据以备份，或导入之前的备份恢复学习进度。</p>
-                <div class="settings-actions">
-                    <button id="export-data" class="btn btn-secondary">导出数据</button>
-                    <button id="import-data" class="btn btn-secondary">导入数据</button>
-                </div>
-            </div>
-            
-            <div class="settings-group">
-                <h4>重置学习进度</h4>
-                <p class="settings-desc">重置特定阶段或所有学习进度。此操作不可恢复！</p>
-                <div class="settings-actions">
-                    <button id="reset-all-progress" class="btn btn-danger">重置所有进度</button>
-                </div>
-                <div class="phase-reset-buttons">
-                    <button id="reset-phase-1" class="btn btn-warning">重置第1阶段</button>
-                    <button id="reset-phase-2" class="btn btn-warning">重置第2阶段</button>
-                    <button id="reset-phase-3" class="btn btn-warning">重置第3阶段</button>
-                    <button id="reset-phase-4" class="btn btn-warning">重置第4阶段</button>
-                </div>
-            </div>
-        </div>
-    `;
-    document.body.appendChild(settingsPanel);
-    
-    // 绑定设置按钮点击事件
-    settingsBtn.addEventListener('click', function() {
-        settingsPanel.classList.toggle('show');
-    });
-    
-    // 绑定关闭按钮事件
-    const closeBtn = settingsPanel.querySelector('.settings-close-btn');
-    if (closeBtn) {
-        closeBtn.addEventListener('click', function() {
-            settingsPanel.classList.remove('show');
+    if (!openSettingsBtn) {
+        console.error('找不到open-settings按钮!');
+    } else {
+        console.log('找到open-settings按钮，添加点击事件');
+        // 打开设置面板
+        openSettingsBtn.addEventListener('click', function(e) {
+            console.log('点击了打开设置按钮');
+            e.preventDefault();
+            settingsModal.classList.add('show');
+            document.body.style.overflow = 'hidden'; // 防止背景滚动
         });
     }
     
-    // 添加设置面板样式
-    addSettingsPanelStyles();
+    if (!closeSettingsBtn) {
+        console.error('找不到close-settings按钮!');
+    } else {
+        // 关闭设置面板
+        closeSettingsBtn.addEventListener('click', function() {
+            console.log('点击了关闭设置按钮');
+            settingsModal.classList.remove('show');
+            document.body.style.overflow = ''; // 恢复背景滚动
+        });
+    }
+    
+    // 点击背景关闭设置面板
+    settingsModal.addEventListener('click', function(e) {
+        if (e.target === settingsModal) {
+            console.log('点击了设置面板背景');
+            settingsModal.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+    });
+    
+    console.log('设置面板初始化完成');
 }
 
-// 添加设置面板样式
-function addSettingsPanelStyles() {
-    const styleElement = document.createElement('style');
-    styleElement.textContent = `
-        .settings-toggle-btn {
-            position: fixed;
-            bottom: 80px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            z-index: 990;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-            transition: var(--transition);
+// 初始化数据管理功能
+function initDataManagement() {
+    // 用户ID管理
+    initUserIdManagement();
+    
+    // 重置进度按钮
+    const resetBtn = document.getElementById('reset-all-progress');
+    if (resetBtn) {
+        console.log('找到重置进度按钮，添加事件监听器');
+        resetBtn.addEventListener('click', function() {
+            console.log('重置按钮被点击');
+            resetAllProgress();
+        });
+    } else {
+        console.error('找不到重置进度按钮，ID: reset-all-progress');
+    }
+    
+    // 阶段重置按钮
+    const phaseResetButtons = document.querySelectorAll('.phase-reset-btn');
+    phaseResetButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const phaseNumber = this.getAttribute('data-phase');
+            resetPhaseProgress(phaseNumber);
+        });
+    });
+    
+    // 数据导出按钮
+    document.getElementById('export-data').addEventListener('click', exportUserData);
+    
+    // 数据导入按钮
+    document.getElementById('import-data').addEventListener('click', importUserData);
+}
+
+// 初始化用户ID管理
+function initUserIdManagement() {
+    // 生成用户ID
+    let userId = localStorage.getItem('userId');
+    if (!userId) {
+        userId = generateUserId();
+        localStorage.setItem('userId', userId);
+    }
+    
+    // 设置学习开始日期
+    let startDate = localStorage.getItem('learningStartDate');
+    if (!startDate) {
+        startDate = new Date().toISOString();
+        localStorage.setItem('learningStartDate', startDate);
+    }
+}
+
+// 生成用户ID
+function generateUserId() {
+    return 'user_' + Math.random().toString(36).substring(2, 15) + 
+        Math.random().toString(36).substring(2, 15);
+}
+
+// 显示用户信息
+function displayUserInfo() {
+    const userIdElement = document.getElementById('user-id');
+    const startDateElement = document.getElementById('learning-start-date');
+    
+    if (userIdElement) {
+        userIdElement.textContent = localStorage.getItem('userId') || '本地用户';
+    }
+    
+    if (startDateElement) {
+        const startDate = localStorage.getItem('learningStartDate');
+        if (startDate) {
+            const formattedDate = new Date(startDate).toLocaleDateString('zh-CN', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            startDateElement.textContent = formattedDate;
         }
+    }
+}
+
+// 重置所有进度
+function resetAllProgress() {
+    console.log('resetAllProgress 函数被调用');
+    
+    if (confirm('确定要重置所有学习进度吗？此操作不可恢复！')) {
+        console.log('用户确认重置进度');
         
-        .settings-toggle-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-        }
+        // 保留用户ID和学习开始日期
+        const userId = localStorage.getItem('userId');
+        console.log('保存的用户ID：', userId);
         
-        .settings-panel {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.9);
-            width: 90%;
-            max-width: 500px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
+        // 记录重置前的存储状态
+        console.log('重置前localStorage包含的键：', Object.keys(localStorage));
         
-        .settings-panel.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translate(-50%, -50%) scale(1);
-        }
+        // 清除所有本地存储（包括学习记录和streak相关数据）
+        localStorage.clear();
+        console.log('已清除所有本地存储');
         
-        .settings-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.25rem 1.5rem;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        }
+        // 仅恢复用户ID，并设置新的学习开始日期
+        if (userId) localStorage.setItem('userId', userId);
+        localStorage.setItem('learningStartDate', new Date().toISOString());
         
-        .settings-header h3 {
-            margin: 0;
-            font-size: 1.5rem;
-            color: var(--dark-color);
-        }
+        // 重置默认值
+        localStorage.setItem('userLevel', '1');
+        localStorage.setItem('userExp', '0');
+        localStorage.setItem('codePoints', '50');
+        localStorage.setItem('streakDays', '0');
         
-        .settings-close-btn {
-            background: none;
-            border: none;
-            font-size: 1.25rem;
-            color: var(--gray-color);
-            cursor: pointer;
-        }
+        // 移除lastVisitDate让streak重新开始
+        localStorage.removeItem('lastVisitDate');
         
-        .settings-content {
-            padding: 1.5rem;
-        }
+        // 确保其他可能的学习记录也被重置
+        localStorage.setItem('learningHistory', '[]');
+        localStorage.setItem('completedTasks', '[]');
         
-        .settings-group {
-            margin-bottom: 2rem;
-        }
+        console.log('重置后localStorage包含的键：', Object.keys(localStorage));
         
-        .settings-group h4 {
-            font-size: 1.2rem;
-            margin-bottom: 0.75rem;
-            color: var(--dark-color);
-        }
+        // 刷新页面以应用更改
+        showNotification('进度已重置', '所有学习进度已成功重置');
+        setTimeout(() => {
+            console.log('即将刷新页面...');
+            window.location.reload();
+        }, 2000);
+    } else {
+        console.log('用户取消了重置操作');
+    }
+}
+
+// 重置特定阶段进度
+function resetPhaseProgress(phaseNumber) {
+    if (confirm(`确定要重置第${phaseNumber}阶段的所有进度吗？`)) {
+        // 获取已完成任务
+        const completedTasks = JSON.parse(localStorage.getItem('completedTasks') || '[]');
         
-        .settings-desc {
-            color: var(--gray-color);
-            margin-bottom: 1rem;
-            font-size: 0.95rem;
-        }
+        // 筛选出非该阶段的任务
+        const filteredTasks = completedTasks.filter(task => {
+            // 检查任务是否属于指定阶段
+            return !task.title.includes(`第${phaseNumber}阶段`) && 
+                   !task.phaseNumber || task.phaseNumber !== parseInt(phaseNumber);
+        });
         
-        .settings-actions {
-            display: flex;
-            gap: 0.75rem;
-            margin-bottom: 1.25rem;
-        }
+        // 保存过滤后的任务
+        localStorage.setItem('completedTasks', JSON.stringify(filteredTasks));
         
-        .phase-reset-buttons {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.75rem;
-            margin-top: 1rem;
-        }
-        
-        .btn-danger {
-            background-color: var(--error-color);
-            color: white;
-        }
-        
-        .btn-danger:hover {
-            background-color: #d63031;
-        }
-        
-        .btn-warning {
-            background-color: var(--warning-color);
-            color: white;
-        }
-        
-        .btn-warning:hover {
-            background-color: #e67e22;
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            .settings-panel {
-                background-color: #1a202c;
-            }
-            
-            .settings-header {
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            }
-            
-            .settings-header h3 {
-                color: white;
-            }
-            
-            .settings-group h4 {
-                color: white;
-            }
-        }
-    `;
-    document.head.appendChild(styleElement);
+        // 刷新页面
+        showNotification('阶段进度已重置', `第${phaseNumber}阶段的进度已成功重置`);
+        setTimeout(() => window.location.reload(), 2000);
+    }
 }
 
 // 导出用户数据
 function exportUserData() {
     const userData = {
+        userId: localStorage.getItem('userId'),
+        learningStartDate: localStorage.getItem('learningStartDate'),
         learningHistory: JSON.parse(localStorage.getItem('learningHistory') || '[]'),
         completedTasks: JSON.parse(localStorage.getItem('completedTasks') || '[]'),
-        userLevel: localStorage.getItem('userLevel'),
-        userExp: localStorage.getItem('userExp'),
-        codePoints: localStorage.getItem('codePoints'),
-        streakDays: localStorage.getItem('streakDays'),
+        userLevel: localStorage.getItem('userLevel') || 1,
+        userExp: localStorage.getItem('userExp') || 0,
+        codePoints: localStorage.getItem('codePoints') || 50,
+        streakDays: localStorage.getItem('streakDays') || 0,
         timestamp: new Date().toISOString()
     };
     
@@ -1309,7 +1274,7 @@ function exportUserData() {
     link.click();
     document.body.removeChild(link);
     
-    showNotification('数据导出成功', '学习进度已保存到本地文件');
+    showNotification('数据导出成功', '您的学习记录已成功导出');
 }
 
 // 导入用户数据
@@ -1327,25 +1292,40 @@ function importUserData() {
                 const userData = JSON.parse(event.target.result);
                 
                 // 验证数据格式
-                if (!userData.learningHistory || !userData.completedTasks) {
+                if (!userData.learningHistory && !userData.completedTasks) {
                     throw new Error('无效的数据格式');
                 }
                 
-                // 保存导入的数据
-                localStorage.setItem('learningHistory', JSON.stringify(userData.learningHistory));
-                localStorage.setItem('completedTasks', JSON.stringify(userData.completedTasks));
-                
-                if (userData.userLevel) localStorage.setItem('userLevel', userData.userLevel);
-                if (userData.userExp) localStorage.setItem('userExp', userData.userExp);
-                if (userData.codePoints) localStorage.setItem('codePoints', userData.codePoints);
-                if (userData.streakDays) localStorage.setItem('streakDays', userData.streakDays);
-                
-                // 显示成功通知
-                showNotification('数据导入成功', '你的学习记录已恢复');
-                
-                // 延迟刷新页面，以便用户看到通知
-                setTimeout(() => window.location.reload(), 2000);
-                
+                // 确认导入
+                if (confirm('确定要导入此数据吗？当前的学习记录将被覆盖。')) {
+                    // 保存用户ID和学习开始日期
+                    const currentUserId = localStorage.getItem('userId');
+                    
+                    // 清除所有本地存储
+                    localStorage.clear();
+                    
+                    // 保留当前用户ID或使用导入的ID
+                    localStorage.setItem('userId', currentUserId || userData.userId || generateUserId());
+                    
+                    // 保存导入的数据
+                    if (userData.learningStartDate) {
+                        localStorage.setItem('learningStartDate', userData.learningStartDate);
+                    } else {
+                        localStorage.setItem('learningStartDate', new Date().toISOString());
+                    }
+                    
+                    localStorage.setItem('learningHistory', JSON.stringify(userData.learningHistory || []));
+                    localStorage.setItem('completedTasks', JSON.stringify(userData.completedTasks || []));
+                    
+                    if (userData.userLevel) localStorage.setItem('userLevel', userData.userLevel);
+                    if (userData.userExp) localStorage.setItem('userExp', userData.userExp);
+                    if (userData.codePoints) localStorage.setItem('codePoints', userData.codePoints);
+                    if (userData.streakDays) localStorage.setItem('streakDays', userData.streakDays);
+                    
+                    // 刷新页面
+                    showNotification('数据导入成功', '您的学习记录已恢复');
+                    setTimeout(() => window.location.reload(), 2000);
+                }
             } catch (error) {
                 showNotification('导入失败', error.message);
             }
@@ -1357,44 +1337,112 @@ function importUserData() {
     fileInput.click();
 }
 
-// 重置全部学习进度
-function resetAllProgress() {
-    if (confirm('确定要重置所有学习进度吗？此操作不可恢复！')) {
-        // 清除所有相关的本地存储项
-        localStorage.removeItem('learningHistory');
-        localStorage.removeItem('currentLearning');
-        localStorage.removeItem('completedTasks');
-        localStorage.removeItem('userLevel');
-        localStorage.removeItem('userExp');
-        localStorage.removeItem('codePoints');
-        localStorage.removeItem('streakDays');
+// 更新连续学习天数
+function updateStreakDays() {
+    // 获取今天的日期（只保留年月日，不考虑时间）
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    // 获取上次访问的日期
+    let lastVisit = localStorage.getItem('lastVisitDate');
+    let streakDays = parseInt(localStorage.getItem('streakDays') || '0');
+    const oldStreakDays = streakDays; // 保存旧的streak值用于比较
+    
+    if (!lastVisit) {
+        // 首次访问，设置streak为1
+        streakDays = 1;
+    } else {
+        // 转换为Date对象
+        const lastVisitDate = new Date(lastVisit);
+        lastVisitDate.setHours(0, 0, 0, 0);
         
-        // 刷新页面以应用更改
-        showNotification('进度已重置', '所有学习进度已成功重置');
+        // 计算日期差
+        const timeDiff = today.getTime() - lastVisitDate.getTime();
+        const dayDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
         
-        // 延迟刷新页面，以便用户看到通知
-        setTimeout(() => window.location.reload(), 2000);
+        if (dayDiff === 0) {
+            // 今天已经访问过，保持streak不变
+        } else if (dayDiff === 1) {
+            // 连续访问，streak+1
+            streakDays += 1;
+            showNotification('连续学习', `恭喜！您已经连续学习${streakDays}天了！`);
+        } else {
+            // 中断了连续访问，重置streak为1
+            streakDays = 1;
+            showNotification('开始新的学习旅程', '欢迎回来！开始新的学习连续记录吧！');
+        }
+    }
+    
+    // 检查是否达到连续学习里程碑，给予奖励
+    checkStreakMilestones(oldStreakDays, streakDays);
+    
+    // 更新本地存储
+    localStorage.setItem('lastVisitDate', today.toISOString());
+    localStorage.setItem('streakDays', streakDays.toString());
+    
+    // 更新UI显示
+    const streakDaysElement = document.getElementById('streak-days');
+    if (streakDaysElement) {
+        streakDaysElement.textContent = streakDays;
     }
 }
 
-// 重置特定阶段的进度
-function resetPhaseProgress(phaseNumber) {
-    if (confirm(`确定要重置第${phaseNumber}阶段的所有进度吗？`)) {
-        // 获取已完成任务
-        const completedTasks = JSON.parse(localStorage.getItem('completedTasks') || '[]');
-        
-        // 筛选出非该阶段的任务
-        const filteredTasks = completedTasks.filter(task => {
-            return !task.title.includes(`第${phaseNumber}阶段`);
-        });
-        
-        // 保存过滤后的任务
-        localStorage.setItem('completedTasks', JSON.stringify(filteredTasks));
-        
-        // 显示通知
-        showNotification('阶段进度已重置', `第${phaseNumber}阶段的进度已成功重置`);
-        
-        // 延迟刷新页面
-        setTimeout(() => window.location.reload(), 2000);
+// 检查连续学习天数里程碑，给予奖励
+function checkStreakMilestones(oldStreak, newStreak) {
+    // 定义里程碑和对应的奖励
+    const milestones = [
+        { days: 3, expReward: 30, pointsReward: 20, message: '连续学习3天！坚持就是胜利！' },
+        { days: 7, expReward: 70, pointsReward: 50, message: '连续学习一周！你已经建立了良好的学习习惯！' },
+        { days: 14, expReward: 140, pointsReward: 100, message: '连续学习两周！你的毅力令人钦佩！' },
+        { days: 30, expReward: 300, pointsReward: 200, message: '连续学习一个月！你已经成为学习的大师！' },
+        { days: 60, expReward: 600, pointsReward: 400, message: '连续学习两个月！你的恒心值得尊敬！' },
+        { days: 100, expReward: 1000, pointsReward: 800, message: '连续学习100天！你是学习界的传奇！' },
+        { days: 365, expReward: 3650, pointsReward: 3000, message: '连续学习一年！你已经超越了99%的人！' }
+    ];
+    
+    // 检查是否达到了任何里程碑
+    for (const milestone of milestones) {
+        if (oldStreak < milestone.days && newStreak >= milestone.days) {
+            // 达到了新的里程碑，给予奖励
+            updateGameStats(milestone.expReward, milestone.pointsReward);
+            
+            // 显示成就通知
+            const achievementPopup = document.createElement('div');
+            achievementPopup.className = 'achievement-popup show';
+            achievementPopup.innerHTML = `
+                <div class="achievement-content">
+                    <h3>学习成就解锁！</h3>
+                    <div class="achievement-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="achievement-details">
+                        <h4>${milestone.message}</h4>
+                        <p>奖励：+${milestone.expReward}经验值，+${milestone.pointsReward}编程点数</p>
+                    </div>
+                    <button class="btn-close">知道了</button>
+                </div>
+            `;
+            
+            document.body.appendChild(achievementPopup);
+            
+            // 5秒后自动关闭
+            setTimeout(() => {
+                achievementPopup.classList.remove('show');
+                setTimeout(() => {
+                    achievementPopup.remove();
+                }, 500);
+            }, 5000);
+            
+            // 关闭按钮事件
+            const closeBtn = achievementPopup.querySelector('.btn-close');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    achievementPopup.classList.remove('show');
+                    setTimeout(() => {
+                        achievementPopup.remove();
+                    }, 500);
+                });
+            }
+        }
     }
 } 
