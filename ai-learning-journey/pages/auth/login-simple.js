@@ -8,6 +8,7 @@ export default function SimpleLoginPage() {
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const router = useRouter();
+  const { redirectTo } = router.query;
   
   // 直接在页面内初始化supabase客户端
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://your-project.supabase.co';
@@ -31,9 +32,9 @@ export default function SimpleLoginPage() {
         setMessage('登录成功!');
         console.log('登录用户数据:', data);
         
-        // 登录成功后重定向到主页
+        // 登录成功后重定向到之前尝试访问的页面，或默认到主页
         setTimeout(() => {
-          router.push('/');
+          router.push(redirectTo || '/');
         }, 1000);
       }
     } catch (err) {
@@ -42,8 +43,8 @@ export default function SimpleLoginPage() {
   }
   
   return (
-    <div style={{ fontFamily: 'Arial, sans-serif', maxWidth: '500px', margin: '40px auto', padding: '20px', border: '1px solid #ddd', borderRadius: '8px' }}>
-      <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>简单登录</h1>
+    <div style={{ fontFamily: 'Arial, sans-serif', maxWidth: '500px', margin: '40px auto', padding: '20px', border: '1px solid #ddd', borderRadius: '8px', backgroundColor: 'white' }}>
+      <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>AI学习之旅 - 用户登录</h1>
       
       {message && (
         <div style={{ padding: '10px', marginBottom: '20px', backgroundColor: message.includes('错误') ? '#ffebee' : '#e8f5e9', borderRadius: '4px' }}>
@@ -96,9 +97,8 @@ export default function SimpleLoginPage() {
       </div>
       
       <div style={{ marginTop: '20px', fontSize: '14px', color: '#666' }}>
-        <p>调试信息:</p>
-        <p>Supabase URL: {supabaseUrl}</p>
-        <p>Anon Key设置: {supabaseAnonKey ? '已设置' : '未设置'}</p>
+        <p>还没有账号？请点击上方"注册账号"链接创建一个新账号。</p>
+        <p>登录后，您可以访问所有学习内容和跟踪您的学习进度。</p>
       </div>
     </div>
   );
