@@ -1,6 +1,17 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM加载完成，开始初始化...');
     
+    // 直接在文档加载完成后初始化重置按钮
+    const resetProgressBtn = document.getElementById('reset-all-progress');
+    if (resetProgressBtn) {
+        console.log('找到重置进度按钮，立即添加事件监听器');
+        resetProgressBtn.addEventListener('click', function() {
+            console.log('重置按钮被点击 - 直接绑定');
+            resetAllProgress();
+        });
+    } else {
+        console.error('DOMContentLoaded时找不到重置进度按钮，ID: reset-all-progress');
+    }
     // 平滑滚动
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
@@ -1185,42 +1196,57 @@ function resetAllProgress() {
     if (confirm('确定要重置所有学习进度吗？此操作不可恢复！')) {
         console.log('用户确认重置进度');
         
-        // 保留用户ID和学习开始日期
-        const userId = localStorage.getItem('userId');
-        console.log('保存的用户ID：', userId);
-        
-        // 记录重置前的存储状态
-        console.log('重置前localStorage包含的键：', Object.keys(localStorage));
-        
-        // 清除所有本地存储（包括学习记录和streak相关数据）
-        localStorage.clear();
-        console.log('已清除所有本地存储');
-        
-        // 仅恢复用户ID，并设置新的学习开始日期
-        if (userId) localStorage.setItem('userId', userId);
-        localStorage.setItem('learningStartDate', new Date().toISOString());
-        
-        // 重置默认值
-        localStorage.setItem('userLevel', '1');
-        localStorage.setItem('userExp', '0');
-        localStorage.setItem('codePoints', '50');
-        localStorage.setItem('streakDays', '0');
-        
-        // 移除lastVisitDate让streak重新开始
-        localStorage.removeItem('lastVisitDate');
-        
-        // 确保其他可能的学习记录也被重置
-        localStorage.setItem('learningHistory', '[]');
-        localStorage.setItem('completedTasks', '[]');
-        
-        console.log('重置后localStorage包含的键：', Object.keys(localStorage));
-        
-        // 刷新页面以应用更改
-        showNotification('进度已重置', '所有学习进度已成功重置');
-        setTimeout(() => {
-            console.log('即将刷新页面...');
-            window.location.reload();
-        }, 2000);
+        try {
+            // 保留用户ID和学习开始日期
+            const userId = localStorage.getItem('userId');
+            console.log('保存的用户ID：', userId);
+            
+            // 记录重置前的存储状态
+            console.log('重置前localStorage包含的键：', Object.keys(localStorage));
+            console.log('重置前localStorage的内容：', JSON.stringify(localStorage));
+            
+            // 清除所有本地存储（包括学习记录和streak相关数据）
+            localStorage.clear();
+            console.log('已清除所有本地存储');
+            
+            // 仅恢复用户ID，并设置新的学习开始日期
+            if (userId) localStorage.setItem('userId', userId);
+            localStorage.setItem('learningStartDate', new Date().toISOString());
+            
+            // 确保所有学习记录被完全重置
+            localStorage.setItem('userLevel', '1');
+            localStorage.setItem('userExp', '0');
+            localStorage.setItem('codePoints', '50');
+            localStorage.setItem('streakDays', '0');
+            localStorage.setItem('completedTasks', '[]');
+            localStorage.setItem('learningHistory', '[]');
+            localStorage.setItem('currentLearning', '{}');
+            
+            // 移除lastVisitDate让streak重新开始
+            localStorage.removeItem('lastVisitDate');
+            
+            // 移除可能影响重置的其他键
+            const keysToRemove = [
+                'phase1Progress', 'phase2Progress', 'phase3Progress', 'phase4Progress', 'phase5Progress',
+                'taskProgress', 'lastTaskCompleted', 'achievements', 'skills', 'lastLogin'
+            ];
+            
+            keysToRemove.forEach(key => localStorage.removeItem(key));
+            
+            // 记录重置后的状态
+            console.log('重置后localStorage包含的键：', Object.keys(localStorage));
+            console.log('重置后localStorage的内容：', JSON.stringify(localStorage));
+            
+            // 刷新页面以应用更改
+            showNotification('进度已重置', '所有学习进度已成功重置，页面将在2秒后刷新');
+            setTimeout(() => {
+                console.log('即将刷新页面...');
+                window.location.reload();
+            }, 2000);
+        } catch (error) {
+            console.error('重置进度时发生错误：', error);
+            alert('重置进度时发生错误：' + error.message);
+        }
     } else {
         console.log('用户取消了重置操作');
     }
